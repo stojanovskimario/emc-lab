@@ -74,7 +74,7 @@ public class AccomodationController {
     @PutMapping("/{id}/edit")
     public ResponseEntity<DisplayAccomodationDto> update(
             @PathVariable Long id,
-            @RequestBody CreateAccomodationDto createProductDto
+            @RequestBody @Valid CreateAccomodationDto createProductDto
     ) {
         return accomodationApplicationService
                 .update(id, createProductDto)

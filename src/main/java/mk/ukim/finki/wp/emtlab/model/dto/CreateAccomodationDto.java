@@ -1,18 +1,16 @@
 package mk.ukim.finki.wp.emtlab.model.dto;
 
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import mk.ukim.finki.wp.emtlab.model.domain.Accomodation;
 import mk.ukim.finki.wp.emtlab.model.domain.Host;
 import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.model.enums.Status;
 
-import java.math.BigDecimal;
-
 public record CreateAccomodationDto(
         String name,
         Category category,
         Status status,
-        @Positive
+        @PositiveOrZero
         Integer numRooms,
         Long hostId,
         Boolean rented

@@ -4,13 +4,17 @@ import mk.ukim.finki.wp.emtlab.model.domain.Host;
 import mk.ukim.finki.wp.emtlab.model.dto.CreateAccomodationDto;
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayAccomodationDto;
 import mk.ukim.finki.wp.emtlab.model.enums.Category;
+import mk.ukim.finki.wp.emtlab.service.application.event.AccomodationRentedEvent;
+import mk.ukim.finki.wp.emtlab.service.application.event.AccomodationFullyBookedEvent;
 import mk.ukim.finki.wp.emtlab.service.application.AccomodationApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.AccomodationService;
 import mk.ukim.finki.wp.emtlab.service.domain.HostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +24,12 @@ public class AccomodationApplicationServiceImpl implements AccomodationApplicati
 
     private final AccomodationService accomodationService;
     private final HostService hostService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AccomodationApplicationServiceImpl(AccomodationService accomodationService, HostService hostService) {
+    public AccomodationApplicationServiceImpl(AccomodationService accomodationService, HostService hostService, ApplicationEventPublisher eventPublisher) {
         this.accomodationService = accomodationService;
         this.hostService = hostService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -51,21 +57,29 @@ public class AccomodationApplicationServiceImpl implements AccomodationApplicati
     }
 
     @Override
+    @Transactional
     public DisplayAccomodationDto create(CreateAccomodationDto createAccomodationDto) {
         Host host = hostService
             .findById(createAccomodationDto.hostId())
             .orElseThrow(() -> new RuntimeException("Host not found with id: " + createAccomodationDto.hostId()));
-        return DisplayAccomodationDto.from(accomodationService.create(createAccomodationDto.toAccomodation(host)));
+        DisplayAccomodationDto createdAccomodation = DisplayAccomodationDto.from(accomodationService.create(createAccomodationDto.toAccomodation(host)));
+        publishFullyBookedEventIfNeeded(createdAccomodation);
+        return createdAccomodation;
     }
 
     @Override
+    @Transactional
     public Optional<DisplayAccomodationDto> update(Long id, CreateAccomodationDto createAccomodationDto) {
         Host host = hostService
                 .findById(createAccomodationDto.hostId())
                 .orElseThrow(() -> new RuntimeException("Host not found with id: " + createAccomodationDto.hostId()));
         return accomodationService
                 .update(id, createAccomodationDto.toAccomodation(host))
-                .map(DisplayAccomodationDto::from);
+                .map(DisplayAccomodationDto::from)
+                .map(displayAccomodationDto -> {
+                    publishFullyBookedEventIfNeeded(displayAccomodationDto);
+                    return displayAccomodationDto;
+                });
     }
 
     @Override
@@ -76,10 +90,23 @@ public class AccomodationApplicationServiceImpl implements AccomodationApplicati
     }
 
     @Override
+    @Transactional
     public Optional<DisplayAccomodationDto> toggleRented(Long id) {
         return accomodationService
                 .toggleRented(id)
-                .map(DisplayAccomodationDto::from);
+                .map(DisplayAccomodationDto::from)
+                .map(displayAccomodationDto -> {
+                    if (Boolean.TRUE.equals(displayAccomodationDto.rented())) {
+                        eventPublisher.publishEvent(new AccomodationRentedEvent(displayAccomodationDto.id(), displayAccomodationDto.name()));
+                    }
+                    return displayAccomodationDto;
+                });
+    }
+
+    private void publishFullyBookedEventIfNeeded(DisplayAccomodationDto accomodationDto) {
+        if (accomodationDto.numRooms() != null && accomodationDto.numRooms() == 0) {
+            eventPublisher.publishEvent(new AccomodationFullyBookedEvent(accomodationDto.id(), accomodationDto.name(), accomodationDto.numRooms()));
+        }
     }
 
     private Sort.Direction resolveDirection(String sortDirection) {
