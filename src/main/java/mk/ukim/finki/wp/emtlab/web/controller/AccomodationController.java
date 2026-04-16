@@ -3,7 +3,9 @@ package mk.ukim.finki.wp.emtlab.web.controller;
 import jakarta.validation.Valid;
 import mk.ukim.finki.wp.emtlab.model.dto.CreateAccomodationDto;
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayAccomodationDto;
+import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.service.application.AccomodationApplicationService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,33 @@ public class AccomodationController {
     @GetMapping
     public ResponseEntity<List<DisplayAccomodationDto>> findAll() {
         return ResponseEntity.ok(accomodationApplicationService.findAll());
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<DisplayAccomodationDto>> findAllPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) Long hostId,
+            @RequestParam(required = false) Long hostCountryId,
+            @RequestParam(required = false) Integer numRooms,
+            @RequestParam(required = false) Boolean hasFreeRooms
+    ) {
+        return ResponseEntity.ok(
+                accomodationApplicationService.findAll(
+                        page,
+                        size,
+                        sortBy,
+                        sortDirection,
+                        category,
+                        hostId,
+                        hostCountryId,
+                        numRooms,
+                        hasFreeRooms
+                )
+        );
     }
 
     @GetMapping("/filter/rented")

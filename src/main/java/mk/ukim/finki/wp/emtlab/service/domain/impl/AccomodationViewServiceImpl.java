@@ -1,12 +1,10 @@
 package mk.ukim.finki.wp.emtlab.service.domain.impl;
 
-import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.model.views.AccomodationView;
 import mk.ukim.finki.wp.emtlab.repository.AccomodationViewRepository;
 import mk.ukim.finki.wp.emtlab.service.domain.AccomodationViewService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -24,29 +22,11 @@ public class AccomodationViewServiceImpl implements AccomodationViewService {
 			int page,
 			int size,
 			String sortBy,
-			String sortDirection,
-			Category category,
-			Long hostId,
-			Long hostCountryId,
-			Integer numRooms,
-			Boolean rented,
-			Boolean hasFreeRooms
+			String sortDirection
 	) {
-		Boolean resolvedRented = resolveRented(rented, hasFreeRooms);
-		Pageable pageable = PageRequest.of(page, size, Sort.by(resolveDirection(sortDirection), resolveSortBy(sortBy)));
-		return accomodationViewRepository.findAllFiltered(category, hostId, hostCountryId, numRooms, resolvedRented, pageable);
-	}
-
-	private Boolean resolveRented(Boolean rented, Boolean hasFreeRooms) {
-		if (rented != null) {
-			return rented;
-		}
-
-		if (hasFreeRooms == null) {
-			return null;
-		}
-
-		return !hasFreeRooms;
+		return accomodationViewRepository.findAll(
+				PageRequest.of(page, size, Sort.by(resolveDirection(sortDirection), resolveSortBy(sortBy)))
+		);
 	}
 
 	private Sort.Direction resolveDirection(String sortDirection) {
@@ -67,7 +47,7 @@ public class AccomodationViewServiceImpl implements AccomodationViewService {
 		}
 
 		return switch (sortBy) {
-			case "name", "createdAt" -> sortBy;
+			case "id", "name", "category", "numRooms", "hostFullName", "countryName" -> sortBy;
 			default -> "name";
 		};
 	}

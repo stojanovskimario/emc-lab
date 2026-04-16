@@ -1,7 +1,6 @@
 package mk.ukim.finki.wp.emtlab.service.application.impl;
 
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayAccomodationViewDto;
-import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.service.application.AccomodationViewApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.AccomodationViewService;
 import org.springframework.data.domain.Page;
@@ -21,16 +20,10 @@ public class AccomodationViewApplicationServiceImpl implements AccomodationViewA
 			int page,
 			int size,
 			String sortBy,
-			String sortDirection,
-			Category category,
-			Long hostId,
-			Long hostCountryId,
-			Integer numRooms,
-			Boolean rented,
-			Boolean hasFreeRooms
+			String sortDirection
 	) {
 		return accomodationViewService
-				.findAll(page, size, sortBy, sortDirection, category, hostId, hostCountryId, numRooms, rented, hasFreeRooms)
+				.findAll(page, size, sortBy, sortDirection)
 				.map(DisplayAccomodationViewDto::from);
 	}
 }

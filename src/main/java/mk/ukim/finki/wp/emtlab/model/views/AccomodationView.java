@@ -1,32 +1,36 @@
 package mk.ukim.finki.wp.emtlab.model.views;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mk.ukim.finki.wp.emtlab.model.enums.Category;
-import mk.ukim.finki.wp.emtlab.model.enums.Status;
+import org.hibernate.annotations.Immutable;
 
-import java.time.LocalDateTime;
+@Entity
+@Getter
+@Immutable
+@NoArgsConstructor
+@Table(name = "accomodation_view")
+public class AccomodationView {
+	@Id
+	private Long id;
 
-public interface AccomodationView {
-	Long getId();
+	private String name;
 
-	String getName();
+	@Enumerated(EnumType.STRING)
+	private Category category;
 
-	Category getCategory();
+	@Column(name = "num_rooms")
+	private Integer numRooms;
 
-	Status getStatus();
+	@Column(name = "host_full_name")
+	private String hostFullName;
 
-	Integer getNumRooms();
-
-	Boolean getRented();
-
-	Long getHostId();
-
-	String getHostName();
-
-	String getHostSurname();
-
-	Long getHostCountryId();
-
-	String getHostCountryName();
-
-	LocalDateTime getCreatedAt();
+	@Column(name = "country_name")
+	private String countryName;
 }

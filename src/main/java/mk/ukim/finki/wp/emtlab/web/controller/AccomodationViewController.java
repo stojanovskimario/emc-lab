@@ -1,7 +1,6 @@
 package mk.ukim.finki.wp.emtlab.web.controller;
 
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayAccomodationViewDto;
-import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.service.application.AccomodationViewApplicationService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -25,26 +24,14 @@ public class AccomodationViewController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "name") String sortBy,
-			@RequestParam(defaultValue = "asc") String sortDirection,
-			@RequestParam(required = false) Category category,
-			@RequestParam(required = false) Long hostId,
-			@RequestParam(required = false) Long hostCountryId,
-			@RequestParam(required = false) Integer numRooms,
-			@RequestParam(required = false) Boolean rented,
-			@RequestParam(required = false) Boolean hasFreeRooms
+			@RequestParam(defaultValue = "asc") String sortDirection
 	) {
 		return ResponseEntity.ok(
 				accomodationViewApplicationService.findAll(
 						page,
 						size,
 						sortBy,
-						sortDirection,
-						category,
-						hostId,
-						hostCountryId,
-						numRooms,
-						rented,
-						hasFreeRooms
+						sortDirection
 				)
 		);
 	}

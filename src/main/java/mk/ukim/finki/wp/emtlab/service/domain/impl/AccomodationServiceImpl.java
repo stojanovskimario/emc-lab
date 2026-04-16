@@ -1,8 +1,12 @@
 package mk.ukim.finki.wp.emtlab.service.domain.impl;
 
 import mk.ukim.finki.wp.emtlab.model.domain.Accomodation;
+import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.repository.AccomodationRepository;
 import mk.ukim.finki.wp.emtlab.service.domain.AccomodationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +29,11 @@ public class AccomodationServiceImpl implements AccomodationService {
     @Override
     public List<Accomodation> findAll() {
         return accomodationRepository.findAll();
+    }
+
+    @Override
+    public Page<Accomodation> findAll(Pageable pageable, Category category, Long hostId, Long hostCountryId, Integer numRooms, Boolean hasFreeRooms) {
+        return accomodationRepository.findAll(buildSpecification(category, hostId, hostCountryId, numRooms, hasFreeRooms), pageable);
     }
 
     @Override
@@ -67,5 +76,35 @@ public class AccomodationServiceImpl implements AccomodationService {
                 accomodation.setRented(!accomodation.getRented());
                 return accomodationRepository.save(accomodation);
             });
+    }
+
+    private Specification<Accomodation> buildSpecification(Category category, Long hostId, Long hostCountryId, Integer numRooms, Boolean hasFreeRooms) {
+        return (root, query, criteriaBuilder) -> {
+            var predicates = criteriaBuilder.conjunction();
+            var host = root.join("host");
+            var country = host.join("country");
+
+            if (category != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(root.get("category"), category));
+            }
+
+            if (hostId != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(host.get("id"), hostId));
+            }
+
+            if (hostCountryId != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(country.get("id"), hostCountryId));
+            }
+
+            if (numRooms != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(root.get("numRooms"), numRooms));
+            }
+
+            if (hasFreeRooms != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(root.get("rented"), !hasFreeRooms));
+            }
+
+            return predicates;
+        };
     }
 }
