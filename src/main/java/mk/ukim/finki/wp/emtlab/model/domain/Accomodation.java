@@ -8,6 +8,20 @@ import mk.ukim.finki.wp.emtlab.model.enums.Category;
 import mk.ukim.finki.wp.emtlab.model.enums.Status;
 
 @Entity
+@NamedEntityGraph(
+        name = "accomodation.host-and-country",
+        attributeNodes = {
+                @NamedAttributeNode(value = "host", subgraph = "host-country-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "host-country-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("country")
+                        }
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
