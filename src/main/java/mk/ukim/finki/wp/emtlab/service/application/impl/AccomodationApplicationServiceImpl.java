@@ -105,7 +105,7 @@ public class AccomodationApplicationServiceImpl implements AccomodationApplicati
 
     private void publishFullyBookedEventIfNeeded(DisplayAccomodationDto accomodationDto) {
         if (accomodationDto.numRooms() != null && accomodationDto.numRooms() == 0) {
-            eventPublisher.publishEvent(new AccomodationFullyBookedEvent(accomodationDto.id(), accomodationDto.name(), accomodationDto.numRooms()));
+            eventPublisher.publishEvent(new AccomodationFullyBookedEvent(accomodationDto.id(), accomodationDto.name(), 0));
         }
     }
 
