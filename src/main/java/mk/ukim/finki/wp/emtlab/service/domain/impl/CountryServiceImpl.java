@@ -1,6 +1,7 @@
 package mk.ukim.finki.wp.emtlab.service.domain.impl;
 
 import mk.ukim.finki.wp.emtlab.model.domain.Country;
+import mk.ukim.finki.wp.emtlab.model.projection.CountryHostStatisticsProjection;
 import mk.ukim.finki.wp.emtlab.repository.CountryRepository;
 import mk.ukim.finki.wp.emtlab.service.domain.CountryService;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<Country> findAll() {
         return countryRepository.findAll();
+    }
+
+    @Override
+    public List<CountryHostStatisticsProjection> findHostStatistics() {
+        return countryRepository.findHostStatistics();
     }
 
     @Override

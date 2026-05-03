@@ -2,6 +2,7 @@ package mk.ukim.finki.wp.emtlab.service.application.impl;
 
 import mk.ukim.finki.wp.emtlab.model.dto.CreateCountryDto;
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayCountryDto;
+import mk.ukim.finki.wp.emtlab.model.projection.CountryHostStatisticsProjection;
 import mk.ukim.finki.wp.emtlab.service.application.CountryApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.CountryService;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class CountryApplicationServiceImpl implements CountryApplicationService 
     @Override
     public List<DisplayCountryDto> findAll() {
         return DisplayCountryDto.from(countryService.findAll());
+    }
+
+    @Override
+    public List<CountryHostStatisticsProjection> findHostStatistics() {
+        return countryService.findHostStatistics();
     }
 
     @Override

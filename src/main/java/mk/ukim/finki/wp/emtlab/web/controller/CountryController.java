@@ -3,6 +3,7 @@ package mk.ukim.finki.wp.emtlab.web.controller;
 import jakarta.validation.Valid;
 import mk.ukim.finki.wp.emtlab.model.dto.CreateCountryDto;
 import mk.ukim.finki.wp.emtlab.model.dto.DisplayCountryDto;
+import mk.ukim.finki.wp.emtlab.model.projection.CountryHostStatisticsProjection;
 import mk.ukim.finki.wp.emtlab.service.application.CountryApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,11 @@ public class CountryController {
     @GetMapping
     public ResponseEntity<List<DisplayCountryDto>> findAll() {
         return ResponseEntity.ok(countryApplicationService.findAll());
+    }
+
+    @GetMapping("/host-statistics")
+    public ResponseEntity<List<CountryHostStatisticsProjection>> findHostStatistics() {
+        return ResponseEntity.ok(countryApplicationService.findHostStatistics());
     }
 
     @PostMapping("/add")
