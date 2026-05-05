@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-interface AsyncResourceState<T> {
+export interface AsyncResourceState<T> {
   item: T | null;
   loading: boolean;
   error: string | null;

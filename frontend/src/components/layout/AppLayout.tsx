@@ -1,6 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
-import TokenBar from './TokenBar';
 
 const AppLayout = () => {
   return (
@@ -24,9 +23,10 @@ const AppLayout = () => {
             <Button component={NavLink} to="/countries" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
               Countries
             </Button>
+            <Button component={NavLink} to="/users" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
+              Users
+            </Button>
           </Box>
-
-          <TokenBar />
         </Toolbar>
       </AppBar>
 

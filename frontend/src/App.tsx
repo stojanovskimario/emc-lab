@@ -7,6 +7,8 @@ import HostsPage from './pages/HostsPage';
 import HostDetailsPage from './pages/HostDetailsPage';
 import CountriesPage from './pages/CountriesPage';
 import CountryDetailsPage from './pages/CountryDetailsPage';
+import UsersPage from './pages/UsersPage';
+import UserDetailsPage from './pages/UserDetailsPage';
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
           <Route path="hosts/:id" element={<HostDetailsPage />} />
           <Route path="countries" element={<CountriesPage />} />
           <Route path="countries/:id" element={<CountryDetailsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="users/:id" element={<UserDetailsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

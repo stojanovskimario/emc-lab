@@ -1,19 +1,17 @@
 import { useEffect, useState } from 'react';
 
-interface AsyncListState<T> {
+export interface AsyncListState<T> {
   items: T[];
   loading: boolean;
   error: string | null;
 }
 
-const initialState = {
-  items: [],
-  loading: true,
-  error: null
-};
-
 const useAsyncList = <T,>(fetcher: () => Promise<T[]>) => {
-  const [state, setState] = useState<AsyncListState<T>>(initialState);
+  const [state, setState] = useState<AsyncListState<T>>({
+    items: [],
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
     let cancelled = false;

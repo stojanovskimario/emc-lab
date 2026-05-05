@@ -80,6 +80,7 @@ public class JwtWebSecurityConfig {
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/user/register", "/api/user/login").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMINISTRATOR")
                                 .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMINISTRATOR")
