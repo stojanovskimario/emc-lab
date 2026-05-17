@@ -6,7 +6,7 @@ export interface AsyncResourceState<T> {
   error: string | null;
 }
 
-const useAsyncResource = <T,>(fetcher: () => Promise<T>) => {
+const useAsyncResource = <T,>(fetcher: () => Promise<T>, enabled = true) => {
   const [state, setState] = useState<AsyncResourceState<T>>({
     item: null,
     loading: true,
@@ -14,6 +14,11 @@ const useAsyncResource = <T,>(fetcher: () => Promise<T>) => {
   });
 
   const fetchResource = useCallback(async () => {
+    if (!enabled) {
+      setState({ item: null, loading: false, error: null });
+      return;
+    }
+
     setState((previousState) => ({ ...previousState, loading: true }));
 
     try {
@@ -23,13 +28,13 @@ const useAsyncResource = <T,>(fetcher: () => Promise<T>) => {
       console.error(error);
       setState({ item: null, loading: false, error: 'Unable to load data.' });
     }
-  }, [fetcher]);
+  }, [enabled, fetcher]);
 
   useEffect(() => {
     void fetchResource();
   }, [fetchResource]);
 
-  return state;
+  return { ...state, refetch: fetchResource };
 };
 
 export default useAsyncResource;

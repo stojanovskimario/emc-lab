@@ -1,14 +1,18 @@
-import { Card, CardContent, Stack, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Host } from '../../types/host';
+import { Delete, Edit, Info } from '@mui/icons-material';
 
 interface HostCardProps {
   host: Host;
+  canEdit?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-const HostCard = ({ host }: HostCardProps) => {
+const HostCard = ({ host, canEdit, onEdit, onDelete }: HostCardProps) => {
   return (
-    <Card variant="outlined" sx={{ height: '100%' }} component={Link} to={`/hosts/${host.id}`} style={{ textDecoration: 'none' }}>
+    <Card variant="outlined" sx={{ height: '100%' }}>
       <CardContent>
         <Stack spacing={1}>
           <Typography variant="h6">
@@ -22,6 +26,21 @@ const HostCard = ({ host }: HostCardProps) => {
           </Typography>
         </Stack>
       </CardContent>
+      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+        <Button component={Link} to={`/hosts/${host.id}`} startIcon={<Info />}>
+          Info
+        </Button>
+        {canEdit && (
+          <Stack direction="row" spacing={1}>
+            <Button startIcon={<Edit />} color="warning" onClick={onEdit}>
+              Edit
+            </Button>
+            <Button startIcon={<Delete />} color="error" onClick={onDelete}>
+              Delete
+            </Button>
+          </Stack>
+        )}
+      </CardActions>
     </Card>
   );
 };

@@ -1,14 +1,19 @@
-import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Accomodation } from '../../types/accomodation';
+import { Delete, Edit, Info, SwapHoriz } from '@mui/icons-material';
 
 interface AccommodationCardProps {
   accommodation: Accomodation;
+  canEdit?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onToggleRented?: () => void;
 }
 
-const AccommodationCard = ({ accommodation }: AccommodationCardProps) => {
+const AccommodationCard = ({ accommodation, canEdit, onEdit, onDelete, onToggleRented }: AccommodationCardProps) => {
   return (
-    <Card variant="outlined" sx={{ height: '100%' }} component={Link} to={`/accommodations/${accommodation.id}`} style={{ textDecoration: 'none' }}>
+    <Card variant="outlined" sx={{ height: '100%' }}>
       <CardContent>
         <Stack spacing={1.5}>
           <Typography variant="h6">{accommodation.name}</Typography>
@@ -29,6 +34,24 @@ const AccommodationCard = ({ accommodation }: AccommodationCardProps) => {
           </Typography>
         </Stack>
       </CardContent>
+      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+        <Button component={Link} to={`/accommodations/${accommodation.id}`} startIcon={<Info />}>
+          Info
+        </Button>
+        {canEdit && (
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <Button startIcon={<SwapHoriz />} color="secondary" onClick={onToggleRented}>
+              Toggle rented
+            </Button>
+            <Button startIcon={<Edit />} color="warning" onClick={onEdit}>
+              Edit
+            </Button>
+            <Button startIcon={<Delete />} color="error" onClick={onDelete}>
+              Delete
+            </Button>
+          </Box>
+        )}
+      </CardActions>
     </Card>
   );
 };

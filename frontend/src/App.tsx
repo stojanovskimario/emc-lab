@@ -1,6 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
+import ProtectedRoute from './components/common/ProtectedRoute';
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import AccommodationsPage from './pages/AccommodationsPage';
 import AccommodationDetailsPage from './pages/AccommodationDetailsPage';
 import HostsPage from './pages/HostsPage';
@@ -16,14 +19,19 @@ const App = () => {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="accommodations" element={<AccommodationsPage />} />
-          <Route path="accommodations/:id" element={<AccommodationDetailsPage />} />
-          <Route path="hosts" element={<HostsPage />} />
-          <Route path="hosts/:id" element={<HostDetailsPage />} />
-          <Route path="countries" element={<CountriesPage />} />
-          <Route path="countries/:id" element={<CountryDetailsPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="users/:id" element={<UserDetailsPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="accommodations" element={<AccommodationsPage />} />
+            <Route path="accommodations/:id" element={<AccommodationDetailsPage />} />
+            <Route path="hosts" element={<HostsPage />} />
+            <Route path="hosts/:id" element={<HostDetailsPage />} />
+            <Route path="countries" element={<CountriesPage />} />
+            <Route path="countries/:id" element={<CountryDetailsPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="users/:id" element={<UserDetailsPage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

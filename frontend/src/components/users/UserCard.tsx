@@ -1,6 +1,7 @@
-import { Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { User } from '../../types/user';
+import { Info } from '@mui/icons-material';
 
 interface UserCardProps {
   user: User;
@@ -37,6 +38,11 @@ const UserCard = ({ user }: UserCardProps) => {
           </Typography>
         </Stack>
       </CardContent>
+      <CardActions sx={{ justifyContent: 'flex-start', px: 2, pb: 2 }}>
+        <Button component={Link} to={`/users/${user.id}`} startIcon={<Info />}>
+          Info
+        </Button>
+      </CardActions>
     </Card>
   );
 };

@@ -1,7 +1,15 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
+import TokenBar from './TokenBar';
 
 const AppLayout = () => {
+  const token = localStorage.getItem('jwtToken');
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken');
+    window.location.assign('/');
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50' }}>
       <AppBar position="sticky" elevation={1} color="primary">
@@ -26,7 +34,24 @@ const AppLayout = () => {
             <Button component={NavLink} to="/users" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
               Users
             </Button>
+            {!token && (
+              <>
+                <Button component={NavLink} to="/login" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
+                  Login
+                </Button>
+                <Button component={NavLink} to="/register" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
+                  Register
+                </Button>
+              </>
+            )}
+            {token && (
+              <Button color="inherit" onClick={handleLogout} sx={{ color: 'inherit', textDecoration: 'none' }}>
+                Logout
+              </Button>
+            )}
           </Box>
+
+          <TokenBar />
         </Toolbar>
       </AppBar>
 

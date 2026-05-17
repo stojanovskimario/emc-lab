@@ -6,7 +6,7 @@ export interface AsyncListState<T> {
   error: string | null;
 }
 
-const useAsyncList = <T,>(fetcher: () => Promise<T[]>) => {
+const useAsyncList = <T,>(fetcher: () => Promise<T[]>, enabled = true) => {
   const [state, setState] = useState<AsyncListState<T>>({
     items: [],
     loading: true,
@@ -14,6 +14,11 @@ const useAsyncList = <T,>(fetcher: () => Promise<T[]>) => {
   });
 
   useEffect(() => {
+    if (!enabled) {
+      setState({ items: [], loading: false, error: null });
+      return;
+    }
+
     let cancelled = false;
 
     const load = async () => {
@@ -35,9 +40,25 @@ const useAsyncList = <T,>(fetcher: () => Promise<T[]>) => {
     return () => {
       cancelled = true;
     };
-  }, [fetcher]);
+  }, [enabled, fetcher]);
 
-  return state;
+  const refetch = async () => {
+    if (!enabled) {
+      return;
+    }
+
+    setState((previousState) => ({ ...previousState, loading: true }));
+
+    try {
+      const items = await fetcher();
+      setState({ items, loading: false, error: null });
+    } catch (error) {
+      console.error(error);
+      setState({ items: [], loading: false, error: 'Unable to load data.' });
+    }
+  };
+
+  return { ...state, refetch };
 };
 
 export default useAsyncList;
