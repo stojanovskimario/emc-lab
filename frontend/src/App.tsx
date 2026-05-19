@@ -12,6 +12,7 @@ import CountriesPage from './pages/CountriesPage';
 import CountryDetailsPage from './pages/CountryDetailsPage';
 import UsersPage from './pages/UsersPage';
 import UserDetailsPage from './pages/UserDetailsPage';
+import ReservationsPage from './pages/ReservationsPage';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="countries/:id" element={<CountryDetailsPage />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="users/:id" element={<UserDetailsPage />} />
+            <Route path="reservations" element={<ReservationsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

@@ -34,6 +34,9 @@ const AppLayout = () => {
             <Button component={NavLink} to="/users" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
               Users
             </Button>
+            <Button component={NavLink} to="/reservations" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>
+              Reservations
+            </Button>
             {!token && (
               <>
                 <Button component={NavLink} to="/login" color="inherit" sx={{ color: 'inherit', textDecoration: 'none' }}>

@@ -20,6 +20,12 @@ export interface CreateCountryRequest {
   continent: string;
 }
 
+export interface CreateReservationRequest {
+  accommodationId: number;
+  reservedAt: string;
+  releaseAt: string;
+}
+
 export interface LoginUserRequest {
   username: string;
   password: string;
